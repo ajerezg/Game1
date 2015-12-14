@@ -16,10 +16,12 @@ public class BasicEnemy extends GameObject{
 	public BasicEnemy(int x, int y, ID id){
 		super(x, y, id);
 		this.rand=new Random();
-		this.fact = rand.nextInt(8)+1;
+		this.fact = rand.nextInt(6)+2;
 		this.vAbs = 10;
 		this.velX=vAbs*fact/10;
+		velX=rand.nextBoolean()?velX*-1:velX;
 		this.velY=vAbs*(10-fact)/10;
+		velY=rand.nextBoolean()?velY*-1:velY;
 		this.time = System.currentTimeMillis()+2000;
 		this.trail = new Trail(20, Color.red, x, y, 16, 16);
 	}
@@ -30,13 +32,13 @@ public class BasicEnemy extends GameObject{
 
 	@Override
 	public void tick() {
-		if(time<=System.currentTimeMillis()){
+		/*if(time<=System.currentTimeMillis()){
 			time+=2000;
 			vAbs*=1.1;
 			this.velX=velX<0?-1*vAbs*fact/10:vAbs*fact/10;
 			this.velY=velY<0?-1*vAbs*(10-fact)/10:vAbs*(10-fact)/10;
 			
-		}
+		}*/
 		this.x += this.velX;
 		this.y += this.velY;
 		

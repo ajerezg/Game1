@@ -21,7 +21,7 @@ public class Trail {
 		float alpha=1;
 		for(int j=0; j<i;j++){
 			alpha -= (1.0/(i+1));
-			System.out.println(alpha);
+			//System.out.println(alpha);
 			this.trail[j][0]=x;
 			this.trail[j][1]=y;
 			this.color[j]= new Color(colorComponent[0],colorComponent[1],colorComponent[2], alpha);

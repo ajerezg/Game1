@@ -11,23 +11,35 @@ public class Game extends Canvas implements Runnable{
 	
 	public static final int WIDTH = 640, HEIGHT = WIDTH / 12 * 9 ;
 	
+	public enum STATE{
+		Menu,
+		Game
+	};
+	
+	public STATE gameState = STATE.Menu;
+	
 	private Thread thread;
 	private boolean running = false;
 	
 	private Handler handler;
 	private HUD hud;
+	private Spawn spawner;
+	
+	private Menu menu;
 	
 	public Game(){
 		handler = new Handler();
 		handler.addObject(new Player(WIDTH/2 -32, HEIGHT/2 -32,ID.Player, handler));
-		
 		handler.addObject(new BasicEnemy(WIDTH/4 *1, HEIGHT/4 *1,ID.BasicEnemy));
-		handler.addObject(new BasicEnemy(WIDTH/4 *1, HEIGHT/4 *3,ID.BasicEnemy));
+		//handler.addObject(new BasicEnemy(WIDTH/4 *1, HEIGHT/4 *3,ID.BasicEnemy));
 		handler.addObject(new BasicEnemy(WIDTH/4 *3, HEIGHT/4 *3,ID.BasicEnemy));
-		handler.addObject(new BasicEnemy(WIDTH/4 *3, HEIGHT/4 *1,ID.BasicEnemy));
-		
+		//handler.addObject(new BasicEnemy(WIDTH/4 *3, HEIGHT/4 *1,ID.BasicEnemy));
 		hud = new HUD();
+		spawner = new Spawn(handler, hud);
 		this.addKeyListener(new KeyInput(handler));
+		
+		menu = new Menu();
+		
 		new Window(WIDTH, HEIGHT, "Pruebamela :$", this);		
 	}
 	
@@ -77,8 +89,14 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	private void tick(){
-		handler.tick();
-		hud.tick();
+		if(gameState == STATE.Game){
+			handler.tick();
+			hud.tick();
+			spawner.tick();
+		}
+		else if(gameState == STATE.Menu){
+			menu.tick();
+		}
 	}
 	
 	private void render(){
@@ -93,9 +111,13 @@ public class Game extends Canvas implements Runnable{
 		g.setColor(Color.black);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-		handler.render(g);
-		
-		hud.render(g);
+		if(gameState == STATE.Game){
+			handler.render(g);
+			hud.render(g);
+		}
+		else if(gameState == STATE.Menu){
+			menu.render(g);
+		}
 		
 		g.dispose();
 		bs.show();
