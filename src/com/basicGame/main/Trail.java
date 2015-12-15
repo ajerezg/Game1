@@ -2,7 +2,6 @@ package com.basicGame.main;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 public class Trail {
 	

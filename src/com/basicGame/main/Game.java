@@ -13,7 +13,8 @@ public class Game extends Canvas implements Runnable{
 	
 	public enum STATE{
 		Menu,
-		Game
+		Game,
+		Dead
 	};
 	
 	public STATE gameState = STATE.Menu;
@@ -26,19 +27,18 @@ public class Game extends Canvas implements Runnable{
 	private Spawn spawner;
 	
 	private Menu menu;
+	private DeadMenu deadMenu;
 	
 	public Game(){
 		handler = new Handler();
-		handler.addObject(new Player(WIDTH/2 -32, HEIGHT/2 -32,ID.Player, handler));
-		handler.addObject(new BasicEnemy(WIDTH/4 *1, HEIGHT/4 *1,ID.BasicEnemy));
-		//handler.addObject(new BasicEnemy(WIDTH/4 *1, HEIGHT/4 *3,ID.BasicEnemy));
-		handler.addObject(new BasicEnemy(WIDTH/4 *3, HEIGHT/4 *3,ID.BasicEnemy));
-		//handler.addObject(new BasicEnemy(WIDTH/4 *3, HEIGHT/4 *1,ID.BasicEnemy));
-		hud = new HUD();
+		hud = new HUD(this);
+		menu = new Menu(this, handler, hud);
+		deadMenu = new DeadMenu(this, handler);
 		spawner = new Spawn(handler, hud);
 		this.addKeyListener(new KeyInput(handler));
+		this.addMouseListener(menu);
 		
-		menu = new Menu();
+		
 		
 		new Window(WIDTH, HEIGHT, "Pruebamela :$", this);		
 	}
@@ -66,7 +66,6 @@ public class Game extends Canvas implements Runnable{
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
 		long timer = System.currentTimeMillis();
-		int frames = 0;
 		while(running){
 			long now = System.nanoTime();
 			delta += (now - lastTime)/ns;
@@ -77,12 +76,8 @@ public class Game extends Canvas implements Runnable{
 			}
 			if(running)
 				render();
-			frames++;
-			
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
-				//System.out.println("FPS: " + frames);
-				frames = 0;
 			}
 		}
 		stop();
@@ -91,11 +86,16 @@ public class Game extends Canvas implements Runnable{
 	private void tick(){
 		if(gameState == STATE.Game){
 			handler.tick();
-			hud.tick();
+			
 			spawner.tick();
+			hud.tick();
 		}
 		else if(gameState == STATE.Menu){
+			handler.tick();
 			menu.tick();
+		}
+		else if(gameState == STATE.Dead){
+			deadMenu.tick();
 		}
 	}
 	
@@ -110,13 +110,21 @@ public class Game extends Canvas implements Runnable{
 		
 		g.setColor(Color.black);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		
-		if(gameState == STATE.Game){
+		//System.out.println(gameState);
+		if(gameState == STATE.Game ){
 			handler.render(g);
 			hud.render(g);
 		}
 		else if(gameState == STATE.Menu){
+			//System.out.println("Rendering Menu");
+			handler.render(g);
 			menu.render(g);
+		}
+		else if(gameState == STATE.Dead){
+			//System.out.println("Rendering Dead Menu");
+			handler.render(g);
+			hud.render(g);
+			deadMenu.render(g);
 		}
 		
 		g.dispose();
@@ -136,7 +144,18 @@ public class Game extends Canvas implements Runnable{
 		else
 			return var;
 	}
-
 	
+	public DeadMenu getDeadMenu(){
+		return this.deadMenu;
+	}
+
+	public Menu getMenu(){
+		return this.menu;
+	}
+	
+	public Handler getHandler(){
+		return this.handler;
+	}
+
 	
 }

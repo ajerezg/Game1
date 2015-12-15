@@ -5,23 +5,22 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
 
-public class BasicEnemy extends GameObject{
-	
+public class GreenHealth extends GameObject{
 	private Trail trail;
 	private Random rand;
 	private int fact;
 	private int vAbs;
 	
-	public BasicEnemy(int x, int y, ID id){
+	public GreenHealth(int x, int y, ID id){
 		super(x, y, id);
 		this.rand=new Random();
 		this.fact = rand.nextInt(6)+2;
-		this.vAbs = 10;
+		this.vAbs = 5;
 		this.velX=vAbs*fact/10;
 		velX=rand.nextBoolean()?velX*-1:velX;
 		this.velY=vAbs*(10-fact)/10;
 		velY=rand.nextBoolean()?velY*-1:velY;
-		this.trail = new Trail(20, Color.red, x, y, 16, 16);
+		this.trail = new Trail(20, Color.green, x, y, 16, 16);
 	}
 	
 	public Rectangle getBounds(){
@@ -50,9 +49,11 @@ public class BasicEnemy extends GameObject{
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.red);
+		g.setColor(Color.green);
 		g.fillRect(this.x, this.y, 16, 16);
 		this.trail.render(g);
 	}
 
 }
+
+

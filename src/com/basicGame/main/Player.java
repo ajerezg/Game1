@@ -70,7 +70,7 @@ public class Player extends GameObject{
 			if(tempObject.getId()== ID.BasicEnemy && !inmune){
 				if(this.getBounds().intersects(tempObject.getBounds())){
 					//COLLISION
-					HUD.HEALT -= 10;
+					HUD.HEALTH -= 30;
 					this.inmune=true;
 					
 					this.changeTime = System.currentTimeMillis()+100;
@@ -78,8 +78,16 @@ public class Player extends GameObject{
 					this.visible=false;
 					//this.trail.setColor(this.color);
 					
+					
 				}
 				
+			}
+			else if(tempObject.getId()== ID.GreenHealth){
+				if(this.getBounds().intersects(tempObject.getBounds())){
+					HUD.HEALTH+=50;
+					handler.object.remove(tempObject);
+					i--;
+				}
 			}
 		}
 	}

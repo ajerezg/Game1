@@ -21,9 +21,14 @@ public class Spawn {
 			hud.setLevel(hud.getLevel()+1);
 			
 			if(hud.getLevel()<5){
-				handler.object.add(new BasicEnemy(rand.nextInt(Game.WIDTH-30),
-						rand.nextInt(Game.HEIGHT-30), ID.BasicEnemy));
+				handler.object.add(new BasicEnemy(rand.nextInt(Game.WIDTH-30)+1,
+						rand.nextInt(Game.HEIGHT-30)+1, ID.BasicEnemy));
 			}
+			if(hud.getLevel()%4==0){
+				handler.object.add(new GreenHealth(rand.nextInt(Game.WIDTH-30)+1,
+						rand.nextInt(Game.HEIGHT-30)+1, ID.GreenHealth));
+			}
+			
 		}
 	}
 	
